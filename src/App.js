@@ -29,8 +29,8 @@ export default function App() {
     <BrowserRouter>
         <Route exact path='/' component={SignInSide} />
         <Route path='/menu' component={MenuSide} />
-        <Route path='/report' component={ReportEventSide} />
-        <Route path='/reserve' component={ReserveSpotSide} />
+        {/* <Route path='/report' component={ReportEventSide} /> */}
+        {/* <Route path='/reserve' component={ReserveSpotSide} /> */}
     </BrowserRouter>
     // <Container maxWidth="sm">
     //   <Box my={4}>
