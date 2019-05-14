@@ -5,7 +5,6 @@ import { withRouter } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
@@ -36,13 +35,13 @@ const styles = theme => ({
     border: 0,
     color: 'white',
     padding: '10px 30px',
-    marginTop: theme.spacing(-20),
+    marginTop: theme.spacing(10),
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     fontWeight: 'bold'
   },
   avatar: {
     marginTop: theme.spacing(5),
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    background: 'gray',
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -50,7 +49,7 @@ const styles = theme => ({
   },
   submit: {
     margin: theme.spacing(2, 0, 5),
-    height: '7vh',
+    height: '6vh',
     fontSize: '2vh',
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   },
@@ -61,23 +60,23 @@ class SimpleMenuSide extends React.Component {
     super(props);
 
     this.state = {
-      email: null
+      email: this.props.location.state.email
     };
 
-    this.emailHandleOnChange = this.emailHandleOnChange.bind(this);
-    this.handleOnSubmit = this.handleOnSubmit.bind(this);
+    this.viewReservedParkingSpots = this.viewReservedParkingSpots.bind(this);
+    this.reserveParkingSpot = this.reserveParkingSpot.bind(this);
   }
 
-  emailHandleOnChange(event) {
-    this.setState({
-      email: event.target.value
+  viewReservedParkingSpots(event) {
+    this.props.history.push({
+      pathname: '/view-reserved-parking-spots',
+      state: { email: this.state.email }
     })
   }
 
-  handleOnSubmit(event) {
-    event.preventDefault()
+  reserveParkingSpot(event) {
     this.props.history.push({
-      pathname: '/menu',
+      pathname: '/reserve',
       state: { email: this.state.email }
     })
   }
@@ -112,8 +111,9 @@ class SimpleMenuSide extends React.Component {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={this.viewReservedParkingSpots}
             >
-              Show my reserved parking spots
+              View my reserved parking spots
             </Button>
 
             <Button
@@ -121,6 +121,7 @@ class SimpleMenuSide extends React.Component {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={this.reserveParkingSpot}
             >
               Reserve parking spot
             </Button>
@@ -131,7 +132,7 @@ class SimpleMenuSide extends React.Component {
               color="primary"
               className={classes.submit}
             >
-              Show reported events
+              View reported events
             </Button>
 
             <Button
@@ -143,9 +144,6 @@ class SimpleMenuSide extends React.Component {
               Report an event
             </Button>
 
-
-
-
           </div>
         </Grid>
       </Grid>
@@ -154,44 +152,3 @@ class SimpleMenuSide extends React.Component {
 }
 
 export default withRouter(withStyles(styles)(SimpleMenuSide));
-
-// export default function MenuSide() {
-//   const classes = useStyles();
-
-//   return (
-//     <Grid container component="main" className={classes.root}>
-//       <CssBaseline />
-//       <Grid item xs={false} sm={4} md={7} className={classes.image} />
-//       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-//         <div className={classes.paper}>
-//           <Avatar className={classes.avatar}>
-//             <MenuOutlinedIcon />
-//           </Avatar>
-//           <Typography component="h1" variant="h5">
-//             Pick an action
-//           </Typography>
-//           <Button
-//               type="submit"
-//               fullWidth
-//               variant="contained"
-//               color="primary"
-//               className={classes.submit}
-//               href="/reserve"
-//             >
-//               Reserve a parking spot
-//             </Button>
-//             <Button
-//               type="submit"
-//               fullWidth
-//               variant="contained"
-//               color="primary"
-//               className={classes.submit}
-//               href="/report"
-//             >
-//               Report an event
-//             </Button>
-//         </div>
-//       </Grid>
-//     </Grid>
-//   );
-// }

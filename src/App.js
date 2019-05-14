@@ -7,7 +7,7 @@ import Link from '@material-ui/core/Link';
 
 import SignInSide from './SignInSide';
 import MenuSide from './MenuSide';
-import ReportEventSide from './ReportEventSide';
+import ViewReservedParkingSpots from './ViewReservedParkingSpots';
 import ReserveSpotSide from './ReserveSpotSide';
 
 import { BrowserRouter, Route } from 'react-router-dom';
@@ -29,8 +29,8 @@ export default function App() {
     <BrowserRouter>
         <Route exact path='/' component={SignInSide} />
         <Route path='/menu' component={MenuSide} />
-        {/* <Route path='/report' component={ReportEventSide} /> */}
-        {/* <Route path='/reserve' component={ReserveSpotSide} /> */}
+        <Route path='/view-reserved-parking-spots' component={ViewReservedParkingSpots} />
+        <Route path='/reserve' component={ReserveSpotSide} />
     </BrowserRouter>
     // <Container maxWidth="sm">
     //   <Box my={4}>
