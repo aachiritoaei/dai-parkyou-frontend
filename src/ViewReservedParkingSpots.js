@@ -2,6 +2,8 @@ import React from 'react';
 
 import { withRouter } from 'react-router-dom';
 
+import axios from 'axios';
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -81,21 +83,54 @@ class ViewReservedParkingSpots extends React.Component {
       email: this.props.location.state.email,
       dense: false,
       secondary: false,
+      parkingSpots: [],
     };
     console.log(this.state.email)
     this.handleGoBack = this.handleGoBack.bind(this);
+
+    this.getParkingSpots = this.getParkingSpots.bind(this);
+    this.populateParkingSpots = this.populateParkingSpots.bind(this);
   }
 
   handleGoBack(event) {
     this.props.history.goBack();
   }
 
-  generate(element) {
-    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 100].map(value =>
-      React.cloneElement(element, {
-        key: value,
-      }),
-    );
+  getParkingSpots() {
+    axios.get('http://localhost:5000/parking/spots', {
+      params: {
+      }
+    })
+      .then(((response) => {
+        this.setState({
+          parkingSpots: response.data
+        })
+      }))
+  }
+
+  populateParkingSpots() {
+    this.getParkingSpots()
+    return this.state.parkingSpots.map(value => {
+      return (
+        <ListItem key={value.id}>
+          <ListItemAvatar>
+            <Avatar className='classes.listicon'>
+              <DirectionsCarOutlined />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={value.id + " - " + value.userEmail}
+            secondary={this.secondary ? 'Secondary text' : null}
+          />
+          <ListItemSecondaryAction>
+            <IconButton aria-label="Delete">
+              <DeleteIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </ListItem >
+      )
+    });
+
   }
 
   render() {
@@ -118,28 +153,11 @@ class ViewReservedParkingSpots extends React.Component {
             <Typography className={classes.avatar} component="h1" variant="h4">
               RESERVED PARKING SPOTS
             </Typography>
-            <Grid container spacing={16}>
+            <Grid container spacing={5}>
               <Grid item xs={12} md={12}>
                 <div className={classes.demo}>
                   <List dense={this.dense}>
-                    {this.generate(
-                      <ListItem>
-                        <ListItemAvatar>
-                          <Avatar className={classes.listicon}>
-                            <DirectionsCarOutlined />
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary="Single-line item"
-                          secondary={this.secondary ? 'Secondary text' : null}
-                        />
-                        <ListItemSecondaryAction>
-                          <IconButton aria-label="Delete">
-                            <DeleteIcon />
-                          </IconButton>
-                        </ListItemSecondaryAction>
-                      </ListItem>,
-                    )}
+                    {this.populateParkingSpots()}
                   </List>
                 </div>
               </Grid>
