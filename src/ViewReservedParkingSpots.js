@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import axios from 'axios';
 
@@ -70,7 +71,7 @@ const styles = theme => ({
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   },
   demo: {
-    maxHeight: '30vw',
+    maxHeight: '40vw',
     overflow: 'auto',
   }
 });
@@ -90,6 +91,10 @@ class ViewReservedParkingSpots extends React.Component {
 
     this.getParkingSpots = this.getParkingSpots.bind(this);
     this.populateParkingSpots = this.populateParkingSpots.bind(this);
+
+    this.handleOnDelete = this.handleOnDelete.bind(this)
+
+    this.getParkingSpots()
   }
 
   handleGoBack(event) {
@@ -97,8 +102,9 @@ class ViewReservedParkingSpots extends React.Component {
   }
 
   getParkingSpots() {
-    axios.get('http://localhost:5000/parking/spots', {
+    axios.get('http://localhost:5000/parking/user', {
       params: {
+        userEmail: this.state.email
       }
     })
       .then(((response) => {
@@ -109,7 +115,6 @@ class ViewReservedParkingSpots extends React.Component {
   }
 
   populateParkingSpots() {
-    this.getParkingSpots()
     return this.state.parkingSpots.map(value => {
       return (
         <ListItem key={value.id}>
@@ -119,18 +124,27 @@ class ViewReservedParkingSpots extends React.Component {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary={value.id + " - " + value.userEmail}
-            secondary={this.secondary ? 'Secondary text' : null}
+            primary={"Parking spot " + value.id + " from " + value.parkingName}
           />
           <ListItemSecondaryAction>
-            <IconButton aria-label="Delete">
+            <IconButton aria-label="Delete" onClick={() => this.handleOnDelete(value.parkingId, value.id)}>
               <DeleteIcon />
             </IconButton>
           </ListItemSecondaryAction>
         </ListItem >
       )
     });
+  }
 
+  handleOnDelete(parkingName, parkingSpot) {
+    axios.delete(`http://localhost:5000/parking/${parkingName}/${parkingSpot}?userEmail=${this.state.email}`, {
+      params: {
+      }
+    })
+      .then(((response) => {
+        alert("Parking spot freed!")
+        this.handleGoBack()
+      }))
   }
 
   render() {
@@ -180,4 +194,5 @@ class ViewReservedParkingSpots extends React.Component {
   }
 }
 
+// export default withRouter(connect()(withStyles(styles)(ViewReservedParkingSpots)));
 export default withRouter(withStyles(styles)(ViewReservedParkingSpots));

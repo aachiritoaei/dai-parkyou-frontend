@@ -13,11 +13,16 @@
     "@material-ui/icons": "^3.0.2",
     "axios": "^0.18.0",
     "clsx": "latest",
+    "google-map-react": "^1.1.4",
+    "google-maps-react": "^2.0.2",
     "react": "latest",
     "react-dom": "latest",
+    "react-google-maps": "^9.4.5",
+    "react-redux": "^7.0.3",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "latest"
+    "react-scripts": "latest",
+    "redux": "^4.0.1"
   },
   "browserslist": {
     "production": [

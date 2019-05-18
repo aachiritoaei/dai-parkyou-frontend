@@ -1,6 +1,8 @@
 import React from 'react';
 
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -140,4 +142,5 @@ class SimpleSignInSide extends React.Component {
   }
 }
 
+// export default withRouter(connect()(withStyles(styles)(SimpleSignInSide)));
 export default withRouter(withStyles(styles)(SimpleSignInSide));
