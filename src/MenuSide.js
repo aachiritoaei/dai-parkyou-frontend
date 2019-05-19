@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -66,6 +65,10 @@ class SimpleMenuSide extends React.Component {
 
     this.viewReservedParkingSpots = this.viewReservedParkingSpots.bind(this);
     this.reserveParkingSpot = this.reserveParkingSpot.bind(this);
+
+    this.viewEvents = this.viewEvents.bind(this)
+
+    this.reportEvent = this.reportEvent.bind(this)
   }
 
   viewReservedParkingSpots(event) {
@@ -78,6 +81,20 @@ class SimpleMenuSide extends React.Component {
   reserveParkingSpot(event) {
     this.props.history.push({
       pathname: '/reserve',
+      state: { email: this.state.email }
+    })
+  }
+
+  viewEvents(event) {
+    this.props.history.push({
+      pathname: '/view-events',
+      state: { email: this.state.email }
+    })
+  }
+
+  reportEvent(event) {
+    this.props.history.push({
+      pathname: '/report-event',
       state: { email: this.state.email }
     })
   }
@@ -132,6 +149,7 @@ class SimpleMenuSide extends React.Component {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={this.viewEvents}
             >
               View reported events
             </Button>
@@ -141,6 +159,7 @@ class SimpleMenuSide extends React.Component {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={this.reportEvent}
             >
               Report an event
             </Button>

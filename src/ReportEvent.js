@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 
 import axios from 'axios';
 
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
@@ -12,22 +11,14 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-
-import DirectionsCarOutlined from '@material-ui/icons/DirectionsCar';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField'
 
 const styles = theme => ({
   root: {
     height: '100vh',
   },
   image: {
-    backgroundImage: 'url(https://source.unsplash.com/PrECKxBI_P8)',
+    backgroundImage: 'url(https://source.unsplash.com/qwtCeJ5cLYs)',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -69,13 +60,13 @@ const styles = theme => ({
     fontSize: '2vh',
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   },
-  demo: {
-    maxHeight: '40vw',
+  description: {
+    maxHeight: '25vw',
     overflow: 'auto',
   }
 });
 
-class ViewReservedParkingSpots extends React.Component {
+class ReportEvent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -83,65 +74,45 @@ class ViewReservedParkingSpots extends React.Component {
       email: this.props.location.state.email,
       dense: false,
       secondary: false,
-      parkingSpots: [],
+      description: '',
     };
     console.log(this.state.email)
     this.handleGoBack = this.handleGoBack.bind(this);
 
-    this.getParkingSpots = this.getParkingSpots.bind(this);
-    this.populateParkingSpots = this.populateParkingSpots.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
 
-    this.handleOnDelete = this.handleOnDelete.bind(this)
+    this.descriptionHandleOnChange = this.descriptionHandleOnChange.bind(this)
 
-    this.getParkingSpots()
   }
 
   handleGoBack(event) {
     this.props.history.goBack();
   }
 
-  getParkingSpots() {
-    axios.get('http://localhost:5000/parking/user', {
-      params: {
-        userEmail: this.state.email
-      }
+  descriptionHandleOnChange(event) {
+    this.setState({
+      description: event.target.value
     })
+  }
+
+  handleSubmit() {
+    axios.post('http://localhost:5000/events',
+      {
+        description: this.state.description
+      },
+      {
+        params: {
+          userEmail: this.state.email
+        },
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
       .then(((response) => {
         this.setState({
-          parkingSpots: response.data
+          events: response.data
         })
-      }))
-  }
-
-  populateParkingSpots() {
-    return this.state.parkingSpots.map(value => {
-      return (
-        <ListItem key={value.id}>
-          <ListItemAvatar>
-            <Avatar className='classes.listicon'>
-              <DirectionsCarOutlined />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={"Parking spot " + value.id + " from " + value.parkingName}
-          />
-          <ListItemSecondaryAction>
-            <IconButton aria-label="Delete" onClick={() => this.handleOnDelete(value.parkingId, value.id)}>
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem >
-      )
-    });
-  }
-
-  handleOnDelete(parkingName, parkingSpot) {
-    axios.delete(`http://localhost:5000/parking/${parkingName}/${parkingSpot}?userEmail=${this.state.email}`, {
-      params: {
-      }
-    })
-      .then(((response) => {
-        alert("Parking spot freed!")
+        alert("Event reported!")
         this.handleGoBack()
       }))
   }
@@ -164,18 +135,32 @@ class ViewReservedParkingSpots extends React.Component {
             </Typography>
 
             <Typography className={classes.avatar} component="h1" variant="h4">
-              RESERVED PARKING SPOTS
+              REPORT AN EVENT
             </Typography>
-            <Grid container spacing={5}>
-              <Grid item xs={12} md={12}>
-                <div className={classes.demo}>
-                  <List dense={this.dense}>
-                    {this.populateParkingSpots()}
-                  </List>
-                </div>
-              </Grid>
-            </Grid>
-
+            <TextField
+              className={classes.description}
+              variant="outlined"
+              margin="normal"
+              multiline={true}
+              required
+              fullWidth
+              id="description"
+              label="Description"
+              name="description"
+              autoComplete="description"
+              autoFocus
+              value={this.state.description}
+              onChange={this.descriptionHandleOnChange}
+            />
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={this.handleSubmit}
+            >
+              Report event
+            </Button>
             <Button
               fullWidth
               variant="contained"
@@ -194,4 +179,4 @@ class ViewReservedParkingSpots extends React.Component {
 }
 
 // export default withRouter(connect()(withStyles(styles)(ViewReservedParkingSpots)));
-export default withRouter(withStyles(styles)(ViewReservedParkingSpots));
+export default withRouter(withStyles(styles)(ReportEvent));

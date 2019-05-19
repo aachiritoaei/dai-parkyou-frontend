@@ -15,19 +15,16 @@ import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import DirectionsCarOutlined from '@material-ui/icons/DirectionsCar';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
+import WarningOutlined from '@material-ui/icons/Warning';
 
 const styles = theme => ({
   root: {
     height: '100vh',
   },
   image: {
-    backgroundImage: 'url(https://source.unsplash.com/PrECKxBI_P8)',
+    backgroundImage: 'url(https://source.unsplash.com/4y8A6Ve-3GE)',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -70,12 +67,12 @@ const styles = theme => ({
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   },
   demo: {
-    maxHeight: '40vw',
+    maxHeight: '25vw',
     overflow: 'auto',
   }
 });
 
-class ViewReservedParkingSpots extends React.Component {
+class ViewEvents extends React.Component {
   constructor(props) {
     super(props);
 
@@ -83,67 +80,48 @@ class ViewReservedParkingSpots extends React.Component {
       email: this.props.location.state.email,
       dense: false,
       secondary: false,
-      parkingSpots: [],
+      events: [],
     };
     console.log(this.state.email)
     this.handleGoBack = this.handleGoBack.bind(this);
 
-    this.getParkingSpots = this.getParkingSpots.bind(this);
-    this.populateParkingSpots = this.populateParkingSpots.bind(this);
+    this.getEvents = this.getEvents.bind(this);
+    this.populateEvents = this.populateEvents.bind(this);
 
-    this.handleOnDelete = this.handleOnDelete.bind(this)
-
-    this.getParkingSpots()
+    this.getEvents()
   }
 
   handleGoBack(event) {
     this.props.history.goBack();
   }
 
-  getParkingSpots() {
-    axios.get('http://localhost:5000/parking/user', {
+  getEvents() {
+    axios.get('http://localhost:5000/events/all', {
       params: {
-        userEmail: this.state.email
       }
     })
       .then(((response) => {
         this.setState({
-          parkingSpots: response.data
+          events: response.data
         })
       }))
   }
 
-  populateParkingSpots() {
-    return this.state.parkingSpots.map(value => {
+  populateEvents() {
+    return this.state.events.map(value => {
       return (
         <ListItem key={value.id}>
           <ListItemAvatar>
             <Avatar className='classes.listicon'>
-              <DirectionsCarOutlined />
+              <WarningOutlined />
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary={"Parking spot " + value.id + " from " + value.parkingName}
+            primary={value.description}
           />
-          <ListItemSecondaryAction>
-            <IconButton aria-label="Delete" onClick={() => this.handleOnDelete(value.parkingId, value.id)}>
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
         </ListItem >
       )
     });
-  }
-
-  handleOnDelete(parkingName, parkingSpot) {
-    axios.delete(`http://localhost:5000/parking/${parkingName}/${parkingSpot}?userEmail=${this.state.email}`, {
-      params: {
-      }
-    })
-      .then(((response) => {
-        alert("Parking spot freed!")
-        this.handleGoBack()
-      }))
   }
 
   render() {
@@ -164,13 +142,13 @@ class ViewReservedParkingSpots extends React.Component {
             </Typography>
 
             <Typography className={classes.avatar} component="h1" variant="h4">
-              RESERVED PARKING SPOTS
+              EVENTS
             </Typography>
             <Grid container spacing={5}>
               <Grid item xs={12} md={12}>
                 <div className={classes.demo}>
                   <List dense={this.dense}>
-                    {this.populateParkingSpots()}
+                    {this.populateEvents()}
                   </List>
                 </div>
               </Grid>
@@ -194,4 +172,4 @@ class ViewReservedParkingSpots extends React.Component {
 }
 
 // export default withRouter(connect()(withStyles(styles)(ViewReservedParkingSpots)));
-export default withRouter(withStyles(styles)(ViewReservedParkingSpots));
+export default withRouter(withStyles(styles)(ViewEvents));
